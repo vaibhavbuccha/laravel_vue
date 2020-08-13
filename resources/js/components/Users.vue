@@ -64,12 +64,13 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="addNewLabel">Add New User</h5>
+              <h5 class="modal-title" id="addNewLabel" v-if="editMode == true" >Edit User Info</h5>
+              <h5 class="modal-title" id="addNewLabel" v-else >Add New User</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-             <form @submit.prevent="createUser" >
+             <form @submit.prevent="editMode ? editUser() : createUser()" >
               <div class="modal-body">
                   <div class="form-group">
                     <input v-model="form.name" type="text" name="name"
@@ -113,7 +114,8 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-success" v-if="editMode == false" >Create</button>
+                <button type="submit" class="btn btn-primary" v-else >Update</button>
               </div>
             </form>
           </div>
@@ -128,8 +130,10 @@
 export default {
   data(){
     return{
+      editMode: true,
       users: {},
       form: new Form({
+        id: '',
         name: '',
         email: '',
         password: '',
@@ -140,13 +144,32 @@ export default {
     }
   },
   methods:{
+    editUser(){
+      this.$Progress.start()
+      // console.log('edit user');
+      this.form.put(`api/user/${this.form.id}`)
+      .then(()=>{
+         $('#addNew').modal('hide')
+          toast.fire({
+            icon: 'success',
+            title: 'User Updated successfully'
+          });
+        this.$Progress.finish()
+      })
+      .catch(() => {
+        this.$Progress.fail()
+      })
+      fire.$emit('AfterCreate');
+    },
     editModal(user){
       this.form.reset();
+      this.editMode = true;
       $('#addNew').modal('show')
       this.form.fill(user)
     },
     newModal(){
       this.form.reset();
+      this.editMode = false;
       $('#addNew').modal('show')
     },
     loadUsers(){

@@ -52,7 +52,20 @@ window.fire = new Vue();
 
 import router from './router';
 
+Vue.component(
+  'passport-clients',
+  require('./components/passport/Clients.vue')
+);
 
+Vue.component(
+  'passport-authorized-clients',
+  require('./components/passport/AuthorizedClients.vue')
+);
+
+Vue.component(
+  'passport-personal-access-tokens',
+  require('./components/passport/PersonalAccessTokens.vue')
+);
 
 /**
  * The following block of code may be used to automatically register your

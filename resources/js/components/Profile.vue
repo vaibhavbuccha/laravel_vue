@@ -175,13 +175,13 @@
                       <div class="form-group row">
                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputName" placeholder="Name">
+                          <input type="email" class="form-control" v-model="form.name" id="inputName" placeholder="Name">
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                          <input type="email" class="form-control" v-model="form.email" id="inputEmail" placeholder="Email">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -193,7 +193,7 @@
                       <div class="form-group row" >
                           <label for="image" class="col-sm-2 col-form-label" >Profile Pic</label>
                           <div class="col-sm-10">
-                              <input type="file" name="" class="form-control-file" id="">
+                              <input type="file" @change="updateProfile" name="" class="form-control-file" id="">
                           </div>
                       </div>
                       <div class="form-group row">
@@ -213,7 +213,7 @@
                       </div>
                       <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
-                          <button type="submit" class="btn btn-danger">Submit</button>
+                          <button @click.prevent="updateInfo" type="submit" class="btn btn-danger">Submit</button>
                         </div>
                       </div>
                     </form>
@@ -228,3 +228,49 @@
         </div>
     </div>
 </template>
+
+<script>
+export default {
+  data(){
+    return {
+      form: new Form({
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        type: '',
+        bio: '',
+        photo: ''
+      })
+    }
+  },
+  created() {
+    axios.get('api/profile')
+    .then((res) => {
+      this.form.fill(res.data) 
+    });
+  },
+  methods:{
+    updateProfile(e){
+      // console.log('uploading',e)
+      let file = e.target.files[0];
+      let render = new FileReader();
+      // let encImage = this;
+      render.onloadend = (file)=>{
+        this.form.photo = render.result; 
+      }
+      // this.form.photo = encImage;
+      render.readAsDataURL(file);
+    },
+    updateInfo(){
+      this.form.put(`api/profile/`)
+      .then((res) => {
+
+      })
+      .catch(()=>{
+        
+      })
+    }
+  }
+}
+</script>

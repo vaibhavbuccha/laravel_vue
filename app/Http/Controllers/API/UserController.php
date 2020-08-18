@@ -56,6 +56,11 @@ class UserController extends Controller
         //
     }
 
+    public function profile()
+    {
+        return auth('api')->user();
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -75,6 +80,17 @@ class UserController extends Controller
         return ['message' => 'user updated successfully'];
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = auth('api')->user();
+        if($request->photo){
+            $name = time().'.' . explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
+
+            \Image::make($request->photo)->save(public_path('img/profile/').$name);
+        }
+        // return ['message' => 'success'];
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -89,4 +105,5 @@ class UserController extends Controller
         // return
         return ['message' => 'User deleted'];
     }
+
 }

@@ -5,6 +5,7 @@ import Developer  from './components/Developer.vue';
 import Profile  from './components/Profile.vue';
 import Users  from './components/Users.vue';
 import Post  from './components/Post.vue';
+import NewPost  from './components/NewPost.vue';
 
 Vue.use(Router);
 const routes = [
@@ -12,6 +13,7 @@ const routes = [
     { path: '/developer', component: Developer },
     { path: '/users', component: Users },
     { path: '/posts', component: Post },
+    { path: '/newposts', component: NewPost },
     { path: '/profile', component: Profile }
   ]
 

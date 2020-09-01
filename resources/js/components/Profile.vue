@@ -197,9 +197,9 @@
                           </div>
                       </div>
                       <div class="form-group row">
-                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                        <label for="inputSkills" class="col-sm-2 col-form-label">Password</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                          <input type="text" class="form-control" v-model="form.password" id="inputSkills" placeholder="Password">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -263,12 +263,13 @@ export default {
       render.readAsDataURL(file);
     },
     updateInfo(){
+      this.$Progress.start()
       this.form.put(`api/profile/`)
       .then((res) => {
-
+        this.$Progress.finish()
       })
       .catch(()=>{
-        
+        this.$Progress.fail()
       })
     }
   }
